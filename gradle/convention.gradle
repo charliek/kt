@@ -1,0 +1,24 @@
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+task wrapper(type: Wrapper) {
+	gradleVersion = "2.3"
+}
+
+configurations.all {
+	resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+		if (details.requested.name == 'groovy') {
+			details.useTarget group: details.requested.group, name: 'groovy-all', version: groovyVersion
+		}
+		if (details.requested.name == 'groovy-all') {
+			details.useVersion groovyVersion
+		}
+		if (details.requested.name == 'slf4j-log4j12') {
+			details.useTarget "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+		}
+		if (details.requested.name == 'log4j') {
+			details.useTarget "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+		}
+	}
+}

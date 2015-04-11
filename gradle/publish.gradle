@@ -1,0 +1,71 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+version = rootProject.file('version.txt').text.trim()
+ext.isSnapshot = version.endsWith("SNAPSHOT")
+
+def pomConfig = {
+	licenses {
+		license {
+			name 'The Apache Software License, Version 2.0'
+			url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+			distribution 'repo'
+		}
+	}
+	developers {
+		developer {
+			id 'charliek'
+			name 'Charlie Knudsen'
+			email 'charlie.knudsen@gmail.com'
+		}
+	}
+}
+
+publishing {
+	publications {
+		shadow(MavenPublication) {
+			from components.shadow
+			artifactId = 'kt'
+			pom.withXml {
+				def root = asNode()
+				// Add additional data into our pom file
+				root.appendNode('description', 'Groovy scripted kafka tail')
+				root.children().last() + pomConfig
+			}
+		}
+	}
+}
+
+bintrayUpload { task ->
+	doFirst {
+		if (isSnapshot) {
+			throw new GradleException('Cannot publish SNAPSHOT versions to BinTray!')
+		}
+	}
+	gradle.taskGraph.whenReady { taskGraph ->
+		if (taskGraph.hasTask(task)) {
+			task.user = bintrayUser
+			task.apiKey = bintrayKey
+		}
+	}
+}
+
+bintray {
+	publications = ['shadow']
+	dryRun = false
+	publish = true
+	pkg {
+		repo = 'maven'
+		name = 'com.charlieknudsen.kt'
+		licenses = ['Apache-2.0']
+		desc = 'Groovy scripted kafka tail'
+		labels = ['kafka', 'groovy']
+		websiteUrl = 'https://github.com/charliek/kt'
+		issueTrackerUrl = 'https://github.com/charliek/kt/issues'
+		vcsUrl = 'https://github.com/charliek/kt.git'
+		version {
+			name = project.version
+			vcsTag = project.version
+		}
+	}
+}

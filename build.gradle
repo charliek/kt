@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+    }
+}
+
+apply plugin:'application'
+apply plugin: 'groovy'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply from: file('gradle/convention.gradle')
+apply from: file('gradle/publish.gradle')
+
+group 'com.charlieknudsen'
+mainClassName = "com.charlieknudsen.kt.Kt"
+
+repositories {
+    mavenLocal()
+    jcenter()
+    // Loading so we can get the spock-snapshot
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
+	compile 'org.apache.kafka:kafka_2.10:0.8.2.0'
+	compile 'com.beust:jcommander:1.47'
+    compile "com.google.guava:guava:18.0"
+
+	// logback
+	compile "org.slf4j:slf4j-api:${slf4jVersion}"
+	compile 'ch.qos.logback:logback-classic:1.1.2'
+	compile "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+	compile "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+
+	// spock
+	testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testRuntime 'cglib:cglib-nodep:2.2.2'
+    testRuntime 'org.objenesis:objenesis:1.2'
+}
+
+shadowJar {
+    mergeServiceFiles()
+    baseName = 'kt'
+    classifier = ''
+}
