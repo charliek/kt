@@ -1,0 +1,20 @@
+machine:
+  java:
+    version:
+      oraclejdk8
+
+dependencies:
+  override:
+    - ./gradlew dependencies
+
+test:
+  override:
+    - ./gradlew check test shadowJar
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/jars
+
+    # Archive the junit files
+    - cp build/test-results/*.xml $CIRCLE_TEST_REPORTS/ || true
+
+    # Archive the jar file that was output
+    - cp build/libs/kt-`cat version.txt`.jar $CIRCLE_ARTIFACTS/jars/ || true

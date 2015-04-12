@@ -2,6 +2,10 @@
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
+if (!JavaVersion.current().java8Compatible) {
+	throw new IllegalStateException("Java 8 is required")
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = "2.3"
 }

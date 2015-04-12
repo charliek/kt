@@ -45,12 +45,6 @@ public class BaseListenerBuilder {
 		watchThread.start();
 	}
 
-	public ImmutableList<BaseListener> getListeners() {
-		return listeners;
-	}
-
-	// http://stackoverflow.com/questions/16251273/can-i-watch-for-single-file-change-with-watchservice-not-the-whole-directory
-	// http://www.codejava.net/java-se/file-io/file-change-notification-example-with-watch-service-api
 	private void watchFiles(Optional<Consumer<ImmutableList<BaseListener>>> changeConsumer) {
 		Set<Path> dirs = paths.stream()
 				.map(Path::getParent)
@@ -122,5 +116,9 @@ public class BaseListenerBuilder {
 			}
 		});
 		return ImmutableList.copyOf(listeners);
+	}
+
+	public ImmutableList<BaseListener> getListeners() {
+		return listeners;
 	}
 }
