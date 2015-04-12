@@ -48,8 +48,7 @@ public class BaseListenerBuilder {
 	private void watchFiles(Optional<Consumer<ImmutableList<BaseListener>>> changeConsumer) {
 		Set<Path> dirs = paths.stream()
 				.map(Path::getParent)
-				.distinct()
-				.collect(Collectors.toCollection(HashSet::new));
+				.collect(Collectors.toSet());
 
 		try (final WatchService watchService = FileSystems.getDefault().newWatchService()) {
 			for (Path dir : dirs) {
@@ -109,6 +108,7 @@ public class BaseListenerBuilder {
 			try {
 				final Class clazz = loader.parseClass(path.toFile());
 				BaseListener listener = (BaseListener) clazz.newInstance();
+				listener.run();
 				listener.init();
 				listeners.add(listener);
 			} catch (Exception e) {

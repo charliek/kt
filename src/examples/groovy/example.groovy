@@ -1,27 +1,17 @@
-List<String> getLogStrings() {
-	[
-			'ERROR',
-			'WARN',
-			'Exception',
-	]
-}
+import com.charlieknudsen.kt.color.Color
+import com.charlieknudsen.kt.color.Matcher
 
-boolean isInteresting(String str) {
-	for (i in logStrings) {
-		if (str.contains(i)) {
-			return true
-		}
-	}
-	return false
-}
+def matcher
 
 void init() {
-	// nothing to do yet
+	matcher = new Matcher([
+		'ERROR',
+		'WARN',
+		'Exception',
+	], Color.CYAN)
 }
 
 void onMessage(byte[] bytes) {
 	def msg = new String(bytes, 'UTF-8')
-	if (isInteresting(msg)) {
-		println(msg)
-	}
+	matcher.search(msg).print()
 }
