@@ -5,7 +5,7 @@ machine:
 
 dependencies:
   override:
-    - ./gradlew dependencies
+    - ./gradlew classes testClasses knows
 
 test:
   override:
