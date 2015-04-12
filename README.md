@@ -1,6 +1,8 @@
 KT - A Groovy Kafka Tail
 ------------------------
 
+[![Circle CI](https://circleci.com/gh/charliek/kt/tree/master.svg?style=svg)](https://circleci.com/gh/charliek/kt/tree/master)
+
 This is a simple program that allows you to tail a kafka topic and run all
 logic through one or more groovy scripts. These scripts will be external to
 the jar and changes to them will be watched and compiled on the fly without
